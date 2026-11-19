@@ -1,8 +1,8 @@
-// The World, Wednesday 18 November 2026 — one front page (v2).
+// The World, Wednesday 18 November 2026 — one front page (v3).
 // Entry for the make.fun bounty "Sum up 18 November's world news in one image"
 // (news-image-20261118, account @do-tinh). A program that draws a newspaper
 // front page — one lead story, nine secondary stories, a world map with pins,
-// a day-in-numbers strip and ~25 one-line briefs — and writes it to
+// a day-in-numbers strip and 34 one-line briefs — and writes it to
 // /output/entry.png (1024x1024 PNG).
 //
 // Pure Node 22 standard library. No network, no clock, no randomness: two runs
@@ -583,10 +583,10 @@ function drawMap(x: number, y: number, w: number, h: number, pins: { lon: number
 }
 
 // ---------- content ----------
-// All 36 stories are dated 18 November 2026 and verified against at least
+// All 43 stories are dated 18 November 2026 and verified against at least
 // two reputable sources each (source links are recorded in the sheet row).
-// The 9 main stories are the verified v1 stories; the 27 briefs add the
-// two cut stories plus 25 newly verified items.
+// The 9 main stories are the verified v1 stories; the 34 briefs add the
+// two cut stories plus 32 newly verified items.
 
 const LEAD = {
   region: "MIDDLE EAST",
@@ -634,6 +634,13 @@ const BRIEFS: { region: string; headline: string }[] = [
   { region: "EUROPE", headline: "Harry says he would rejoin Army" },
   { region: "AMERICAS", headline: "Haitians march for Bukele troops" },
   { region: "OCEANIA", headline: "M5.8 quake hits Papua New Guinea" },
+  { region: "SPORT", headline: "Zverev downs Shelton, books ATP Finals semi" },
+  { region: "MIDDLE EAST", headline: "Board of Peace warns Gaza truce may collapse" },
+  { region: "ASIA", headline: "Mahindra wins Earthshot Prize for e-rickshaw" },
+  { region: "ASIA", headline: "Korea seals buttons to stop AI exam cheats" },
+  { region: "EUROPE", headline: "US says Ukraine deep strikes do not work" },
+  { region: "ASIA", headline: "Philippines charges Markle over child abuse" },
+  { region: "ASIA", headline: "India, Japan open defence talks in Tokyo" },
 ];
 
 // Numbers strip: first three are column 1, last three column 2.
@@ -681,11 +688,11 @@ function drawLead(): void {
   drawText(LEAD.headline1, MX, y0 + 66, hs, INK, "serif");
   drawText(LEAD.headline2, MX, y0 + 114, hs, INK, "serif");
   drawBlock(LEAD.deck, MX, y0 + 128, 19, INK_SOFT, "sans", 600, 25);
-  iconRadar(648, y0, 352, 228);
+  iconRadar(648, y0, 352, 212);
 }
 
 function drawSecondary(): void {
-  const y0 = 346;
+  const y0 = 330;
   const cellW = 238;
   const cellH = 86;
   for (let i = 0; i < SECONDARY.length; i++) {
@@ -702,34 +709,34 @@ function drawSecondary(): void {
 }
 
 function drawMapNumbers(): void {
-  const y0 = 542;
-  drawMap(MX, y0, 560, 170, PINS);
+  const y0 = 526;
+  drawMap(MX, y0, 560, 155, PINS);
   drawText("THE DAY IN NUMBERS", 600, y0 + 16, 14, RED, "sansBold");
   for (let i = 0; i < 3; i++) {
-    const vy = y0 + 48 + i * 50;
-    drawText(NUMBERS[i].value, 600, vy, 26, INK, "sansBold");
+    const vy = y0 + 48 + i * 42;
+    drawText(NUMBERS[i].value, 600, vy, 24, INK, "sansBold");
     drawText(NUMBERS[i].label, 600, vy + 16, 11, INK_SOFT, "sans");
-    drawText(NUMBERS[i + 3].value, 800, vy, 26, INK, "sansBold");
+    drawText(NUMBERS[i + 3].value, 800, vy, 24, INK, "sansBold");
     drawText(NUMBERS[i + 3].label, 800, vy + 16, 11, INK_SOFT, "sans");
   }
 }
 
 function drawBriefs(): void {
-  const y0 = 728;
+  const y0 = 696;
   drawText("ALSO TODAY", MX, y0 + 16, 14, RED, "sansBold");
   const colX = [MX, 528];
   const firstBaseline = y0 + 40;
-  const lineH = 16;
+  const lineH = 15;
   for (let i = 0; i < BRIEFS.length; i++) {
-    const col = i < 14 ? 0 : 1;
-    const row = i < 14 ? i : i - 14;
+    const col = i < 17 ? 0 : 1;
+    const row = i < 17 ? i : i - 17;
     const bx = colX[col];
     const by = firstBaseline + row * lineH;
     const b = BRIEFS[i];
     fillRect(bx, by - 5, 5, 5, RED);
-    let x = drawText(b.region, bx + 12, by, 15, RED, "sansBold");
-    x = drawText(" · ", x, by, 15, INK_SOFT, "sans");
-    drawText(b.headline, x, by, 15, INK, "sans");
+    let x = drawText(b.region, bx + 12, by, 14, RED, "sansBold");
+    x = drawText(" · ", x, by, 14, INK_SOFT, "sans");
+    drawText(b.headline, x, by, 14, INK, "sans");
   }
 }
 
@@ -745,11 +752,11 @@ function drawFooter(): void {
 function main(): void {
   drawMasthead();
   drawLead();
-  fillRect(MX, 338, RX - MX, 1, GRAY);
+  fillRect(MX, 322, RX - MX, 1, GRAY);
   drawSecondary();
-  fillRect(MX, 534, RX - MX, 1, GRAY);
+  fillRect(MX, 518, RX - MX, 1, GRAY);
   drawMapNumbers();
-  fillRect(MX, 720, RX - MX, 1, GRAY);
+  fillRect(MX, 688, RX - MX, 1, GRAY);
   drawBriefs();
   drawFooter();
   const png = encodePNG();
